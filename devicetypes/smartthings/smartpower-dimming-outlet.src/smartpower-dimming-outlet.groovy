@@ -16,7 +16,7 @@
  *	Date: 2013-12-04
  */
 metadata {
-	definition (name: "SmartPower Dimming Outlet", namespace: "smartthings", author: "SmartThings") {
+	definition (name: "SmartPower Dimming Outlet", namespace: "smartthings", author: "SmartThings", ocfDeviceType: "oic.d.smartplug") {
 		capability "Switch"
 		capability "Switch Level"
 		capability "Power Meter"
@@ -24,6 +24,7 @@ metadata {
 		capability "Refresh"
 		capability "Actuator"
 		capability "Sensor"
+		capability "Outlet"
 
 		fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0008,0B04,0B05", outClusters: "0019", manufacturer: "CentraLite", model: "4257050-ZHAC"
 
@@ -43,9 +44,9 @@ metadata {
 	tiles(scale: 2) {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-				attributeState "on", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#79b821", nextState:"turningOff"
+				attributeState "on", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00A0DC", nextState:"turningOff"
 				attributeState "off", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
-				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#79b821", nextState:"turningOff"
+				attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00A0DC", nextState:"turningOff"
 				attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
 			}
 			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
@@ -79,7 +80,8 @@ def parse(String description) {
 		*/
 		event.value = event.value / 10
 	}
-	return event
+
+	return event ? createEvent(event) : event
 }
 
 def setLevel(value) {
